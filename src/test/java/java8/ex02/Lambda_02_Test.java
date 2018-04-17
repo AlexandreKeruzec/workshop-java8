@@ -17,17 +17,34 @@ import static org.junit.Assert.*;
 public class Lambda_02_Test {
 
     // tag::PersonToAccountMapper[]
-    interface PersonToAccountMapper {
-        Account map(Person p);
-    }
+//    interface PersonToAccountMapper {
+//        Account map(Person p);
+//    }
     // end::PersonToAccountMapper[]
+    
+    interface PersonToAnyMapper<T> {
+        T map(Person p);
+    }
 
     // tag::map[]
-    private List<Account> map(List<Person> personList, PersonToAccountMapper mapper) {
-        // TODO implémenter la méthode
-        return null;
-    }
+//    private List<Account> map(List<Person> personList, PersonToAccountMapper mapper) {
+//        // TODO implémenter la méthode
+//    	List<Account> result = new ArrayList<>();
+//    	for(Person person:personList){
+//    		result.add(mapper.map(person));
+//    	}
+//        return result;
+//    }
     // end::map[]
+    
+    private <T> List<T> map(List<Person> personList, PersonToAnyMapper mapper) {
+        // TODO implémenter la méthode
+    	List<T> result = new ArrayList<T>();
+    	for(Person person:personList){
+    		result.add((T) mapper.map(person));
+    	}
+        return result;
+    }
 
 
     // tag::test_map_person_to_account[]
@@ -38,7 +55,12 @@ public class Lambda_02_Test {
 
         // TODO transformer la liste de personnes en liste de comptes
         // TODO tous les objets comptes ont un solde à 100 par défaut
-        List<Account> result = map(personList, null);
+        List<Account> result = map(personList, p ->{
+        	Account acc = new Account();
+        	acc.setOwner(p);
+        	acc.setBalance(100);
+        	return acc;
+        });
 
         assertThat(result, hasSize(personList.size()));
         assertThat(result, everyItem(hasProperty("balance", is(100))));
@@ -53,7 +75,7 @@ public class Lambda_02_Test {
         List<Person> personList = Data.buildPersonList(100);
 
         // TODO transformer la liste de personnes en liste de prénoms
-        List<String> result = null;
+        List<String> result = map(personList, p -> p.getFirstname());
 
         assertThat(result, hasSize(personList.size()));
         assertThat(result, everyItem(instanceOf(String.class)));
