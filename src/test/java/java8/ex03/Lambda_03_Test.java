@@ -42,13 +42,10 @@ public class Lambda_03_Test {
 //        PersonProcessor verifyPerson = p->p.getFirstname().startsWith("first");
 //        PersonProcessor verifyPerson = p->p.getLastname().startsWith("last");
 //        PersonProcessor verifyPerson = p->assertTrue(p.getAge()>0);
-        PersonProcessor verifyPerson = new PersonProcessor() {
-			@Override
-			public void process(Person p) {
-				assertTrue(p.getFirstname().startsWith("first"));
-				assertTrue(p.getLastname().startsWith("last"));
-				assertTrue(p.getAge()>0);
-			}
+        PersonProcessor verifyPerson = p->{
+        	assertTrue(p.getFirstname().startsWith("first"));
+        	assertTrue(p.getLastname().startsWith("last"));
+        	assertTrue(p.getAge()>0);
 		};
 
         assertThat(verifyPerson, notNullValue());
